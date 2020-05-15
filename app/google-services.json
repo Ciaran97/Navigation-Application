@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "216260498656",
+    "firebase_url": "https://swannavi-1b266.firebaseio.com",
+    "project_id": "swannavi-1b266",
+    "storage_bucket": "swannavi-1b266.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:216260498656:android:a2516cebb845f7d1056c85",
+        "android_client_info": {
+          "package_name": "com.example.swannavigation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "216260498656-qasr3ge4va89r8l309aetpmgkcg0nqi9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAywFxSqy3CRBReOVnooOxWw5OoQL2BalM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "216260498656-qasr3ge4va89r8l309aetpmgkcg0nqi9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
