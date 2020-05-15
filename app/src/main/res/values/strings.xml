@@ -26,4 +26,5 @@
     <string name="home_second">Home Second</string>
     <string name="password">Password</string>
     <string name="email_address">Email Address</string>
+    <string name="title_activity_drawer">DrawerActivity</string>
 </resources>
