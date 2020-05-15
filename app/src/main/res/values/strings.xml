@@ -27,4 +27,6 @@
     <string name="password">Password</string>
     <string name="email_address">Email Address</string>
     <string name="title_activity_drawer">DrawerActivity</string>
+    <string name="user_location_permission_explanation" />
+    <string name="user_location_permission_not_granted" />
 </resources>

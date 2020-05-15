@@ -13,7 +13,6 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -454,12 +453,12 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
-    private static class MainActivityLocationCallback
+    public static class MainActivityLocationCallback
             implements LocationEngineCallback<LocationEngineResult> {
 
         private final WeakReference<MainActivity> activityWeakReference;
 
-        MainActivityLocationCallback(MainActivity activity) {
+        public MainActivityLocationCallback(MainActivity activity) {
             this.activityWeakReference = new WeakReference<>(activity);
         }
 
