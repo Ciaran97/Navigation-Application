@@ -28,7 +28,6 @@ import com.mapbox.android.core.location.LocationEngineRequest;
 import com.mapbox.android.core.location.LocationEngineResult;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
-import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.models.DirectionsResponse;
 import com.mapbox.api.directions.v5.models.DirectionsRoute;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
@@ -84,6 +83,11 @@ public class HomeFragment extends Fragment implements
     private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
     private NavigationMapRoute navigationMapRoute;
     private HomeFragmentLocationCallback callback = new HomeFragmentLocationCallback(this);
+
+    // private SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext());
+
+
+    // String units = sharedPreferences.getString("units", "metric");
 
 
 
@@ -379,7 +383,7 @@ public class HomeFragment extends Fragment implements
         NavigationRoute.builder(this.getContext())
                 .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
                 .origin(origin)
-                .voiceUnits(DirectionsCriteria.IMPERIAL)
+                .voiceUnits("metric")
                 .destination(destination)
                 .build()
                 .getRoute(this);
