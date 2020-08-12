@@ -44,5 +44,20 @@
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
+    <string name="unitsofM">metric</string>
+    <string name="recorded_trips">Recorded Trips</string>
+    <string name="date">Date:</string>
+    <string name="from">From:</string>
+    <string name="to">To:</string>
+    <string name="units_of_measurement">Units Of Measurement</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
+
+
+    <string-array name="units_array">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+
 </resources>

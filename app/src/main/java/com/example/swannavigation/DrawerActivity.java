@@ -1,9 +1,9 @@
 package com.example.swannavigation;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -14,12 +14,15 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class DrawerActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private View settings;
-
+    private TextView email;
+    private TextView name;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,10 @@ public class DrawerActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+//Log.d("Drawer: ", units);
+
+        mAuth = FirebaseAuth.getInstance();
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -42,6 +49,14 @@ public class DrawerActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
+        //navigationView.setNavigationItemSelectedListener(this);
+        View header = navigationView.getHeaderView(0);
+        /*View view=navigationView.inflateHeaderView(R.layout.nav_header_main);*/
+        name = (TextView) header.findViewById(R.id.UserDisplayName);
+        email = (TextView) header.findViewById(R.id.UserEmail);
+        name.setText(mAuth.getCurrentUser().getDisplayName());
+        email.setText(mAuth.getCurrentUser().getEmail());
+
     }
 
     @Override
@@ -49,13 +64,14 @@ public class DrawerActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.drawer, menu);
 
-        menu.getItem(0).setIntent(new Intent(DrawerActivity.this, SettingsActivity.class));
+        //  menu.getItem(0).setIntent(new Intent(DrawerActivity.this, SettingsActivity.class));
 
 
 
 
         return true;
     }
+
 
     @Override
     public boolean onSupportNavigateUp() {

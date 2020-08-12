@@ -10,6 +10,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.swannavigation.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.gson.JsonObject;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineCallback;
@@ -35,6 +43,8 @@ import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
@@ -49,10 +59,13 @@ import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 import com.mapbox.services.android.navigation.ui.v5.NavigationLauncher;
 import com.mapbox.services.android.navigation.ui.v5.NavigationLauncherOptions;
+import com.mapbox.services.android.navigation.ui.v5.listeners.NavigationListener;
 import com.mapbox.services.android.navigation.ui.v5.route.NavigationMapRoute;
 import com.mapbox.services.android.navigation.v5.navigation.NavigationRoute;
 
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -65,7 +78,7 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconOffset;
 
 public class HomeFragment extends Fragment implements
-        OnMapReadyCallback, PermissionsListener, Callback<DirectionsResponse> {
+        OnMapReadyCallback, PermissionsListener, Callback<DirectionsResponse>, NavigationListener {
 
     private static final int REQUEST_CODE_AUTOCOMPLETE = 1;
     private CarmenFeature home;
@@ -84,17 +97,20 @@ public class HomeFragment extends Fragment implements
     private NavigationMapRoute navigationMapRoute;
     private HomeFragmentLocationCallback callback = new HomeFragmentLocationCallback(this);
 
-    // private SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this.requireContext());
-
-
-    // String units = sharedPreferences.getString("units", "metric");
-
-
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    String uid = mAuth.getCurrentUser().getUid();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference myRef = database.getReference("Routes");
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    FloatingActionButton btn;
+    String units;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
         Mapbox.getInstance(this.requireContext(), getString(R.string.access_token));
 
         locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
@@ -107,9 +123,27 @@ public class HomeFragment extends Fragment implements
         mapView = rootView.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+
+        db.collection(uid).document("Setting").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+                if (task.getResult().get("units").toString().equals("metric")) {
+                    units = "metric";
+                } else if (task.getResult().get("units").toString().equals("imperial")) {
+                    units = "imperial";
+                }
+            }
+
+
+        });
+
+
+// ...
+
+        btn = mapView.findViewById(R.id.fab_start_nav);
+
         return rootView;
-
-
     }
 
 
@@ -183,21 +217,22 @@ public class HomeFragment extends Fragment implements
         mapView.onSaveInstanceState(outState);
     }
 
+    @SuppressLint("MissingPermission")
     private void enableLocationComponent(@NonNull Style loadedMapStyle) {
-// Check if permissions are enabled and if not request
+        // Check if permissions are enabled and if not request
         if (PermissionsManager.areLocationPermissionsGranted(this.getContext())) {
 
-// Get an instance of the LocationComponent.
+            // Get an instance of the LocationComponent.
             LocationComponent locationComponent = mapBoxMap.getLocationComponent();
 
-// Activate the LocationComponent
-            locationComponent.activateLocationComponent(
-                    LocationComponentActivationOptions.builder(this.getContext(), loadedMapStyle).build());
+            // Activate the LocationComponent
+            locationComponent.activateLocationComponent(LocationComponentActivationOptions.builder(this.getContext(), loadedMapStyle).build());
 
-// Enable the LocationComponent so that it's actually visible on the map
+            // Enable the LocationComponent so that it's actually visible on the map
+
             locationComponent.setLocationComponentEnabled(true);
 
-// Set the LocationComponent's camera mode
+            // Set the LocationComponent's camera mode
 
             locationComponent.setCameraMode(CameraMode.TRACKING,
                     750L /*duration*/,
@@ -206,7 +241,7 @@ public class HomeFragment extends Fragment implements
                     10.0 /*tilt*/,
                     null /*transition listener*/);
 
-// Set the LocationComponent's render mode
+            // Set the LocationComponent's render mode
             locationComponent.setRenderMode(RenderMode.COMPASS);
 
             initLocationEngine();
@@ -272,6 +307,7 @@ public class HomeFragment extends Fragment implements
 
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
+
         mapBoxMap = mapboxMap;
 
         mapBoxMap.setStyle(Style.MAPBOX_STREETS, new Style.OnStyleLoaded() {
@@ -283,20 +319,19 @@ public class HomeFragment extends Fragment implements
                 addUserLocations();
 
                 // Add the symbol layer icon to map for future use
-                style.addImage(symbolIconId, BitmapFactory.decodeResource(
-                        HomeFragment.this.getResources(), R.drawable.blue_marker_view));
+                style.addImage(symbolIconId, BitmapFactory.decodeResource(HomeFragment.this.getResources(), R.drawable.blue_marker_view));
 
                 Toast.makeText(HomeFragment.this.getActivity(), "Style Loaded", Toast.LENGTH_LONG);
                 enableLocationComponent(style);
-                // Map is set up and the style has loaded. Now you can add data or make other map adjustments.
 
+                // Map is set up and the style has loaded. Now you can add data or make other map adjustments.
                 navigationMapRoute = new NavigationMapRoute(null, mapView, mapBoxMap);
 
 
-// Create an empty GeoJSON source using the empty feature collection
+                // Create an empty GeoJSON source using the empty feature collection
                 setUpSource(style);
 
-// Set up a new symbol layer for displaying the searched location's feature coordinates
+                // Set up a new symbol layer for displaying the searched location's feature coordinates
                 setupLayer(style);
             }
         });
@@ -308,20 +343,36 @@ public class HomeFragment extends Fragment implements
                 && response.body() != null
                 && !response.body().routes().isEmpty()) {
             List<DirectionsRoute> routes = response.body().routes();
+
             navigationMapRoute.addRoutes(routes);
-            //routeLoading.setVisibility(View.INVISIBLE);
-            //fabRemoveRoute.setVisibility(View.VISIBLE);
 
-            // boolean simulateRoute = true;
 
-// Create a NavigationLauncherOptions object to package everything together
+            // Create a NavigationLauncherOptions object to package everything together
             NavigationLauncherOptions options = NavigationLauncherOptions.builder()
                     .directionsRoute(response.body().routes().get(0))
                     .shouldSimulateRoute(true)
                     .build();
 
-// Call this method with Context from within an Activity
-            NavigationLauncher.startNavigation(this.requireActivity(), options);
+            Activity activity = this.requireActivity();
+            // Sets the new camera position
+            CameraPosition position = new CameraPosition.Builder()
+                    .zoom(10)
+                    .build();
+
+            mapBoxMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(position), 5000);
+
+
+            btn.show();
+
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    NavigationLauncher.startNavigation(activity, options);
+
+                }
+            });
         }
     }
 
@@ -347,30 +398,14 @@ public class HomeFragment extends Fragment implements
                 if (style != null) {
                     GeoJsonSource source = style.getSourceAs(geojsonSourceLayerId);
                     if (source != null) {
-                        source.setGeoJson(FeatureCollection.fromFeatures(
-                                new Feature[]{Feature.fromJson(selectedCarmenFeature.toJson())}));
+                        source.setGeoJson(FeatureCollection.fromFeatures(new Feature[]{Feature.fromJson(selectedCarmenFeature.toJson())}));
                     }
-
                     // Move map camera to the selected location
                     Point destination;
 
-
-                    destination = Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(),
-                            ((Point) selectedCarmenFeature.geometry()).latitude());
-
+                    destination = Point.fromLngLat(((Point) selectedCarmenFeature.geometry()).longitude(), ((Point) selectedCarmenFeature.geometry()).latitude());
 
                     BuildRoute(destination);
-
-                    /**
-                     mapBoxMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-
-
-                     new CameraPosition.Builder()
-                     .target(new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
-                     ((Point) selectedCarmenFeature.geometry()).longitude()))
-                     .zoom(14)
-                     .build()), 4000);
-                     **/
                 }
             }
         }
@@ -378,15 +413,53 @@ public class HomeFragment extends Fragment implements
 
     protected void BuildRoute(Point destination) {
         Point origin = Point.fromLngLat(currentLocation.getLongitude(), currentLocation.getLatitude());
-        //Point destination = Point.fromLngLat(-77.0365, 38.8977);
+        WriteRoute(origin, destination);
+
 
         NavigationRoute.builder(this.getContext())
                 .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
                 .origin(origin)
-                .voiceUnits("metric")
+                .voiceUnits(units)
                 .destination(destination)
                 .build()
                 .getRoute(this);
+
+
+    }
+
+
+    public void WriteRoute(Point origin, Point destination) {
+
+
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
+        String format = simpleDateFormat.format(new Date());
+        Trip trip = new Trip(format, origin.latitude(), origin.longitude(), destination.latitude(), destination.longitude());
+        myRef.child(uid).child(trip.TripDate).setValue(trip).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    Log.d("Routes", "Route Added");
+                } else {
+                    Log.e("Routes", task.getException().toString());
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void onCancelNavigation() {
+        btn.hide();
+    }
+
+    @Override
+    public void onNavigationFinished() {
+
+    }
+
+    @Override
+    public void onNavigationRunning() {
+
     }
 
 
@@ -418,9 +491,7 @@ public class HomeFragment extends Fragment implements
                 }
 
                 // Create a Toast which displays the new location's coordinates
-                Toast.makeText(activity.getActivity(), String.format(activity.getString(R.string.new_location),
-                        String.valueOf(currentLocation.getLatitude()), String.valueOf(currentLocation.getLongitude())),
-                        Toast.LENGTH_SHORT).show();
+
 
                 // Pass the new location to the Maps SDK's LocationComponent
                 if (activity.mapBoxMap != null && result.getLastLocation() != null) {

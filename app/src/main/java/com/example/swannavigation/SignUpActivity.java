@@ -1,5 +1,6 @@
 package com.example.swannavigation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -68,7 +69,6 @@ public class SignUpActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
 
-                                Log.d(TAG, "createUserWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
 
                                 UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -80,19 +80,17 @@ public class SignUpActivity extends AppCompatActivity {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if (task.isSuccessful()) {
-                                                    Log.d(TAG, "User profile updated.");
                                                 }
                                             }
                                         });
                                 // Sign in success, update UI with the signed-in user's information
-
-                                //updateUI(user);
+                                Intent intent = new Intent(SignUpActivity.this, DrawerActivity.class);
+                                startActivity(intent);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w(TAG, "createUserWithEmail:failure", task.getException());
                                 Toast.makeText(SignUpActivity.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
-                               // updateUI(null);
                             }
 
                             // ...
@@ -101,7 +99,6 @@ public class SignUpActivity extends AppCompatActivity {
                     .addOnFailureListener(this, new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Log.d("CreateUser", "Error: " + e);
                         }
                     });
         }

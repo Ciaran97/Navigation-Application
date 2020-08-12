@@ -21,6 +21,20 @@
             app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@android:drawable/ic_search_category_default"
             tools:ignore="MissingConstraints" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_start_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:layout_margin="16dp"
+            android:tint="@android:color/white"
+            android:visibility="invisible"
+            app:backgroundTint="#EE0000"
+            app:srcCompat="@drawable/ic_directions_black_24dp"
+
+            tools:ignore="MissingConstraints" />
+
     </com.mapbox.mapboxsdk.maps.MapView>
 
     <FrameLayout
