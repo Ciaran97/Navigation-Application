@@ -46,8 +46,54 @@
             android:id="@+id/divider3"
             android:layout_width="409dp"
             android:layout_height="1dp"
-            android:background="?android:attr/listDivider"
-            app:layout_constraintVertical_bias="0.063" />
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="25dp"
+            android:background="?android:attr/listDivider" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:gravity="center_horizontal"
+            android:text="@string/preferred_mode_of_transport" />
+
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/driving"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center_horizontal"
+                android:text="@string/driving" />
+
+            <RadioButton
+                android:id="@+id/walking"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center_horizontal"
+                android:text="@string/walking" />
+
+            <RadioButton
+                android:id="@+id/public_Tran"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginBottom="15dp"
+                android:gravity="center_horizontal"
+                android:text="@string/cycling"
+
+                />
+        </RadioGroup>
+
 
     </LinearLayout>
 

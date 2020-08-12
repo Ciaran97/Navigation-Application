@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 public class DrawerActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private View settings;
     private TextView email;
     private TextView name;
     private FirebaseAuth mAuth;

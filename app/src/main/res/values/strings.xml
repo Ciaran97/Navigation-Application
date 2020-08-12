@@ -53,6 +53,13 @@
     <string name="units_of_measurement">Units Of Measurement</string>
     <string name="metric">Metric</string>
     <string name="imperial">Imperial</string>
+    <string name="settings">Settings</string>
+    <string name="preferred_mode_of_transport">Preferred Transport</string>
+
+    <string name="public_transport">Public Transport</string>
+    <string name="walking">Walking</string>
+    <string name="driving">Driving</string>
+    <string name="cycling">cycling</string>
 
 
     <string-array name="units_array">

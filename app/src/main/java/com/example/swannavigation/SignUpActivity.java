@@ -19,6 +19,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
+import org.jetbrains.annotations.NotNull;
+
 public class SignUpActivity extends AppCompatActivity {
 
     Button btnSignUp;
@@ -61,8 +63,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    public void SignUp(final String name, final String surname, String email, String password, String password2){
-        if(password.equals(password2)){
+    public void SignUp(final String name, final String surname, String email, @NotNull String password, String password2) {
+        if (password.equals(password2)) {
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override

@@ -104,6 +104,7 @@ public class HomeFragment extends Fragment implements
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     FloatingActionButton btn;
     String units;
+    String mode = "driving";
 
 
     @Nullable
@@ -132,6 +133,15 @@ public class HomeFragment extends Fragment implements
                     units = "metric";
                 } else if (task.getResult().get("units").toString().equals("imperial")) {
                     units = "imperial";
+                }
+
+
+                if (task.getResult().get("mode").toString().equals("walking")) {
+                    mode = "walking";
+                } else if (task.getResult().get("units").toString().equals("driving")) {
+                    mode = "driving";
+                } else if (task.getResult().get("units").toString().equals("cycling")) {
+                    mode = "cycling";
                 }
             }
 
@@ -350,7 +360,6 @@ public class HomeFragment extends Fragment implements
             // Create a NavigationLauncherOptions object to package everything together
             NavigationLauncherOptions options = NavigationLauncherOptions.builder()
                     .directionsRoute(response.body().routes().get(0))
-                    .shouldSimulateRoute(true)
                     .build();
 
             Activity activity = this.requireActivity();
@@ -419,6 +428,7 @@ public class HomeFragment extends Fragment implements
         NavigationRoute.builder(this.getContext())
                 .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
                 .origin(origin)
+                .profile(mode)
                 .voiceUnits(units)
                 .destination(destination)
                 .build()
