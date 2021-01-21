@@ -1,7 +1,7 @@
 package com.example.swannavigation;
 
 
-import com.google.firebase.database.IgnoreExtraProperties;
+        import com.google.firebase.database.IgnoreExtraProperties;
 
 
 @IgnoreExtraProperties

@@ -23,7 +23,7 @@ public class GalleryViewModel extends ViewModel {
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
-    private MutableLiveData<String> mText;
+    private final MutableLiveData<String> mText;
 
     public GalleryViewModel() {
         mText = new MutableLiveData<>();

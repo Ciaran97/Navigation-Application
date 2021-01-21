@@ -29,7 +29,7 @@ public class SlideshowFragment extends Fragment implements View.OnClickListener 
     RadioButton walk;
     RadioButton cycle;
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+    private final String uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

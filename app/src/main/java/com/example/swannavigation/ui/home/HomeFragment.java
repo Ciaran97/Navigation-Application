@@ -84,18 +84,18 @@ public class HomeFragment extends Fragment implements
     private CarmenFeature home;
     private CarmenFeature work;
     private MapView mapView;
-    private String geojsonSourceLayerId = "geojsonSourceLayerId";
-    private String symbolIconId = "symbolIconId";
+    private final String geojsonSourceLayerId = "geojsonSourceLayerId";
+    private final String symbolIconId = "symbolIconId";
     public static Location currentLocation;
     LocationManager locationManager;
     String provider;
     private MapboxMap mapBoxMap;
     private PermissionsManager permissionsManager;
     private LocationEngine locationEngine;
-    private long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000;
-    private long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
+    private final long DEFAULT_INTERVAL_IN_MILLISECONDS = 1000;
+    private final long DEFAULT_MAX_WAIT_TIME = DEFAULT_INTERVAL_IN_MILLISECONDS * 5;
     private NavigationMapRoute navigationMapRoute;
-    private HomeFragmentLocationCallback callback = new HomeFragmentLocationCallback(this);
+    private final HomeFragmentLocationCallback callback = new HomeFragmentLocationCallback(this);
 
     FirebaseAuth mAuth = FirebaseAuth.getInstance();
     String uid = mAuth.getCurrentUser().getUid();

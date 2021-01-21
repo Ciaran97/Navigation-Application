@@ -14,8 +14,8 @@ import java.util.ArrayList;
 public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.ViewHolder> {
 
     // List to store all the contact details
-    private ArrayList<AddressView> addressList;
-    private Context mContext;
+    private final ArrayList<AddressView> addressList;
+    private final Context mContext;
 
     // Counstructor for the Class
     public RecyclerAdaptor(ArrayList<AddressView> listdata, Context context) {
@@ -57,9 +57,9 @@ public class RecyclerAdaptor extends RecyclerView.Adapter<RecyclerAdaptor.ViewHo
     public class ViewHolder extends RecyclerView.ViewHolder {
 
 
-        private TextView Origin;
-        private TextView TripDate;
-        private TextView Destination;
+        private final TextView Origin;
+        private final TextView TripDate;
+        private final TextView Destination;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
