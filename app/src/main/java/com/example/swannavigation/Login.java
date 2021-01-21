@@ -1,21 +1,22 @@
 package com.example.swannavigation;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import timber.log.Timber;
 
 public class Login extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class Login extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         if(mAuth.getCurrentUser() != null){
-            Intent intent = new Intent(Login.this, MainActivity.class);
+            Intent intent = new Intent(Login.this, DrawerActivity.class);
             startActivity(intent);
         }
 
@@ -47,7 +48,7 @@ public class Login extends AppCompatActivity {
             public void onClick(View v) {
                 String email = txtEmail.getText().toString();
                 String password = txtPassword.getText().toString();
-                Login(email, password);
+                LoginEmail(email, password);
             }
         });
 
@@ -61,12 +62,10 @@ public class Login extends AppCompatActivity {
     }
 
 
-    public void Login(String email, String password){
-        Log.d("Login", "Login() started!");
-        if(email == "" || password == ""){
+    public void LoginEmail(String email, String password) {
+        Timber.d("Login() started!");
+        if (!email.equals("") || !password.equals("")) {
 
-        }
-        else {
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
@@ -74,14 +73,14 @@ public class Login extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
-                                Log.d("Login", "signInWithEmail:success");
+                                Timber.d("signInWithEmail:success");
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                Intent intent = new Intent(Login.this, MainActivity.class);
+                                Intent intent = new Intent(Login.this, DrawerActivity.class);
                                 startActivity(intent);
                                 //updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
-                                Log.w("Login", "signInWithEmail:failure", task.getException());
+                                Timber.tag("Login").w(task.getException(), "signInWithEmail:failure");
                                 Toast.makeText(Login.this, "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                                 //updateUI(null);

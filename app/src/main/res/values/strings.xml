@@ -26,4 +26,45 @@
     <string name="home_second">Home Second</string>
     <string name="password">Password</string>
     <string name="email_address">Email Address</string>
+    <string name="title_activity_drawer">DrawerActivity</string>
+    <string name="user_location_permission_explanation" />
+    <string name="user_location_permission_not_granted" />
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Measurement</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Units of Measurement</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+
+    <string name="unitsofM">metric</string>
+    <string name="recorded_trips">Recorded Trips</string>
+    <string name="date">Date:</string>
+    <string name="from">From:</string>
+    <string name="to">To:</string>
+    <string name="units_of_measurement">Units Of Measurement</string>
+    <string name="metric">Metric</string>
+    <string name="imperial">Imperial</string>
+    <string name="settings">Settings</string>
+    <string name="preferred_mode_of_transport">Preferred Transport</string>
+
+    <string name="public_transport">Public Transport</string>
+    <string name="walking">Walking</string>
+    <string name="driving">Driving</string>
+    <string name="cycling">cycling</string>
+
+
+    <string-array name="units_array">
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+
 </resources>
